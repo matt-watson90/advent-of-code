@@ -1,21 +1,29 @@
 import Data.Char
 
-solve :: Integer -> Int
-solve x = doTheCalculation $ listOfInt
+
+solvePart1 :: Integer -> Int
+solvePart1 x = doTheCalculation listOfInt 1
     where listOfInt = map digitToInt $ show x
 
-doTheCalculation :: [Int] -> Int
-doTheCalculation (x:xs) 
-                | firstAndLastAreTheSame = x + totalForConsecutiveNumbers(x:xs)
-                | otherwise =totalForConsecutiveNumbers (x:xs)
-            where firstAndLastAreTheSame = x == head (reverse xs)
+solvePart2 :: Integer -> Int
+solvePart2 x = doTheCalculation  listOfInt gap
+    where listOfInt = map digitToInt $ show x
+          gap = (length listOfInt) `div` 2
 
-totalForConsecutiveNumbers :: [Int]-> Int
-totalForConsecutiveNumbers [] = 0
-totalForConsecutiveNumbers (x:xs) = areEqual x xs + totalForConsecutiveNumbers xs 
+
+doTheCalculation :: [Int] -> Int-> Int
+doTheCalculation xs gap = totalForGapN circularList gap
+                            where circularList = (xs ++ (take gap xs))
+            
+
+totalForGapN :: [Int] -> Int -> Int
+totalForGapN [] gap = 0
+totalForGapN (x:xs) gap = currentElement + totalForGapN xs gap
+                        where currentElement = areEqual gap (x:xs)
 
 areEqual :: Int -> [Int] -> Int
 areEqual _ [] = 0
-areEqual a bs 
-            | (a == head bs) = a
+areEqual gap (b:bs) 
+            | length bs < gap = 0
+            | (b == (b:bs)!!gap) = b
             | otherwise = 0 
