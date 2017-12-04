@@ -14,7 +14,7 @@ listOfInt x =  map digitToInt $ show x
 
 doTheCalculation :: [Int] -> Int-> Int
 doTheCalculation xs gap = totalForGapN circularList gap
-                            where circularList = (xs ++ (take gap xs))
+                            where circularList = xs ++ (take gap xs)
             
 
 totalForGapN :: [Int] -> Int -> Int
