@@ -3,9 +3,15 @@ import Data.List
 input :: [Int]
 input = [14,0,15,12,11,11,3,5,1,6,8,4,9,1,8,4]
 
-reallocateUntilSeenBefore :: [[Int]] -> [Int]-> Int
+part1 :: Int
+part1 =   fst $ reallocateUntilSeenBefore [] input
+
+part2 :: Int
+part2 =  (\x -> x-1) $ fst $ reallocateUntilSeenBefore [] (snd $ (reallocateUntilSeenBefore [] input))
+
+reallocateUntilSeenBefore :: [[Int]] -> [Int]-> (Int, [Int])
 reallocateUntilSeenBefore seen blocks = case reallocatedBlock `elem` seen  of
-                            True -> length seen + 1
+                            True -> (length seen + 1, reallocatedBlock)
                             False -> reallocateUntilSeenBefore (reallocatedBlock:seen) reallocatedBlock
                         where reallocatedBlock = reallocate blocks
 
