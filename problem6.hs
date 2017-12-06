@@ -16,11 +16,12 @@ reallocateUntilSeenBefore seen blocks = case reallocatedBlock `elem` seen  of
                         where reallocatedBlock = reallocate blocks
 
 reallocate :: [Int] -> [Int]
-reallocate xs = (\(x,y,z) -> z) $ redistribute $ extractLargestElement xs
+reallocate xs = (\(x,y,z) -> z) $ distributeLargestBlock $ extractLargestElement xs
 
-redistribute :: (Int, Int, [Int]) -> (Int, Int, [Int])
-redistribute (0, x, xs) = (0, x, xs)
-redistribute x = redistribute $ distributeToNextBlock x                              
+distributeLargestBlock :: (Int, Int, [Int]) -> (Int, Int, [Int])
+distributeLargestBlock (0, x, xs) = (0, x, xs) -- We've reallocated the largest block
+distributeLargestBlock x = distributeLargestBlock $ distributeToNextBlock x -- Distribute one of whatever we've got left to the next block 
+                                                                            -- and then keep going                              
 
 distributeToNextBlock :: (Int, Int, [Int]) -> (Int, Int, [Int])
 distributeToNextBlock (numberLeft, index, xs) = (numberLeft-1, currentIndex, incrementElement xs currentIndex)
