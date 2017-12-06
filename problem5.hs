@@ -7,18 +7,18 @@ input = S.fromList [0,2,2,-2,-2,-2,1,2,2,-1,-4,-8,-7,-11,0,-13,-8,-7,-13,-11,-15
 part1 :: IO ()
 part1 = print (solveMaze (incrementInstruction (+1)) 0 0 input)
 
-part2 :: IO ()
-part2 = print (solveMaze (incrementInstruction (\x -> x + (strangeJump x))) 0 0 input)
+main :: IO ()
+main = print (solveMaze (incrementInstruction (\x -> x + (strangeJump x))) 0 0 input)
 
 solveMaze ::  (S.Seq Int -> Int -> S.Seq Int) -> Int -> Int -> S.Seq Int -> Int 
-solveMaze incrementFunction instruction numberOfMoves xs   = case canEscape instruction xs of
+solveMaze incrementFunction instruction numberOfMoves xs  = case canEscape instruction xs of
                            True -> numberOfMoves
                            False -> solveMaze (incrementFunction) (instruction + xs `S.index` instruction) (numberOfMoves+1) (incrementFunction  xs instruction) 
                             
 canEscape :: Int-> S.Seq Int -> Bool
 canEscape instruction xs =  instruction >= length xs
-                            || (xs `S.index` instruction > (length (S.drop instruction xs))) 
-                            || (0 > xs `S.index` instruction + (length (S.take instruction xs)))
+                            || (xs `S.index` instruction > (length xs - instruction)) 
+                            || (0 > xs `S.index` instruction +  instruction)
 
 incrementInstruction ::  (Int -> Int) -> S.Seq Int -> Int -> S.Seq Int
 incrementInstruction f xs index = S.adjust (f) index xs
